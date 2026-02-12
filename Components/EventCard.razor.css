@@ -1,0 +1,119 @@
+.event-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.event-card-header {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.event-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.event-capacity {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.event-card-body {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+.event-info {
+  margin-bottom: 1rem;
+}
+
+.event-info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.event-info-item .icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.event-info-item .label {
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.event-info-item .value {
+  flex: 1;
+}
+
+.event-description {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.event-card-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-details {
+  display: inline-block;
+  background: white;
+  color: #667eea;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.btn-details:hover {
+  background: #f0f0f0;
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .event-title {
+    font-size: 1.25rem;
+  }
+
+  .event-info-item {
+    font-size: 0.875rem;
+  }
+
+  .event-info-item .icon {
+    font-size: 1rem;
+  }
+}

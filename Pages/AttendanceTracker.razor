@@ -1,0 +1,140 @@
+@page "/attendance"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject AttendanceService AttendanceService
+@inject EventService EventService
+
+<PageTitle>Attendance Tracker - EventEase</PageTitle>
+
+<div class="attendance-page">
+    <div class="page-header">
+        <h1>📊 Attendance Tracker</h1>
+        <p class="subtitle">Monitor event registrations and attendance</p>
+    </div>
+
+    <div class="attendance-content">
+        @if (!allAttendance.Any())
+        {
+            <div class="no-data">
+                <p>No attendance records yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-value">@GetEventCount()</div>
+                    <div class="summary-label">Events with Registrations</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value">@allAttendance.Count</div>
+                    <div class="summary-label">Total Registrations</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value">@allAttendance.Sum(a => a.NumberOfAttendees)</div>
+                    <div class="summary-label">Total Attendees</div>
+                </div>
+            </div>
+
+            <div class="events-section">
+                <h2>Events Overview</h2>
+                @foreach (var eventGroup in GetEventGroups())
+                {
+                    var eventData = EventService.GetEventById(eventGroup.Key);
+                    if (eventData != null)
+                    {
+                        var stats = AttendanceService.GetEventStatistics(eventGroup.Key);
+                        <div class="event-attendance-card" @key="eventGroup.Key">
+                            <div class="event-card-header">
+                                <h3>@eventData.Name</h3>
+                                <span class="attendance-count">@stats.TotalRegistrations registrations</span>
+                            </div>
+                            <div class="event-card-body">
+                                <p><strong>📅 Date:</strong> @eventData.Date.ToString("MMMM dd, yyyy 'at' hh:mm tt")</p>
+                                <p><strong>📍 Location:</strong> @eventData.Location</p>
+                                <p><strong>👥 Total Attendees:</strong> @stats.TotalAttendees</p>
+                                <p><strong>🎯 Capacity:</strong> @eventData.Capacity</p>
+                                <div class="capacity-bar">
+                                    <div class="capacity-fill" style="width: @GetCapacityPercentage(stats.TotalAttendees, eventData.Capacity)%"></div>
+                                </div>
+                                <small>@stats.TotalAttendees / @eventData.Capacity (@GetCapacityPercentage(stats.TotalAttendees, eventData.Capacity)% full)</small>
+                            </div>
+                            <div class="event-card-footer">
+                                <button class="btn-toggle" @onclick="() => ToggleAttendees(eventGroup.Key)">
+                                    @(expandedEvents.Contains(eventGroup.Key) ? "Hide" : "Show") Attendees
+                                </button>
+                            </div>
+                            @if (expandedEvents.Contains(eventGroup.Key))
+                            {
+                                <div class="attendees-list">
+                                    <h4>Registered Attendees</h4>
+                                    <table class="attendees-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Attendees</th>
+                                                <th>Registered</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var record in eventGroup.OrderBy(a => a.UserName))
+                                            {
+                                                <tr @key="record.Id">
+                                                    <td>@record.UserName</td>
+                                                    <td>@record.Email</td>
+                                                    <td>@record.NumberOfAttendees</td>
+                                                    <td>@record.RegistrationDate.ToString("MMM dd, yyyy")</td>
+                                                    <td><span class="status-badge status-@record.AttendanceStatus.ToLower()">@record.AttendanceStatus</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AttendanceRecord> allAttendance = new();
+    private HashSet<int> expandedEvents = new();
+
+    protected override void OnInitialized()
+    {
+        allAttendance = AttendanceService.GetAllAttendance();
+    }
+
+    private IEnumerable<IGrouping<int, AttendanceRecord>> GetEventGroups()
+    {
+        return allAttendance.GroupBy(a => a.EventId).OrderBy(g => g.Key);
+    }
+
+    private int GetEventCount()
+    {
+        return allAttendance.Select(a => a.EventId).Distinct().Count();
+    }
+
+    private void ToggleAttendees(int eventId)
+    {
+        if (expandedEvents.Contains(eventId))
+        {
+            expandedEvents.Remove(eventId);
+        }
+        else
+        {
+            expandedEvents.Add(eventId);
+        }
+    }
+
+    private int GetCapacityPercentage(int attendees, int capacity)
+    {
+        if (capacity == 0) return 0;
+        return Math.Min(100, (int)((attendees / (double)capacity) * 100));
+    }
+}

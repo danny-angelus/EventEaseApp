@@ -1,0 +1,131 @@
+@page "/events/{id:int}/register"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject EventService EventService
+@inject UserSessionService SessionService
+@inject AttendanceService AttendanceService
+@inject NavigationManager Navigation
+
+<PageTitle>Registration - @(selectedEvent?.Name ?? "Event") - EventEase</PageTitle>
+
+<div class="registration-page">
+    @if (selectedEvent == null)
+    {
+        <div class="not-found">
+            <h1>😕 Event Not Found</h1>
+            <p>Cannot register for an event that does not exist.</p>
+            <a href="/events" class="btn-back">Back to Event List</a>
+        </div>
+    }
+    else if (registrationComplete)
+    {
+        <div class="success-message">
+            <h1>✅ Registration Successful!</h1>
+            <p>You have successfully registered for the event:</p>
+            <h2>@selectedEvent.Name</h2>
+            <p class="event-date">📅 @selectedEvent.Date.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")</p>
+            <p class="confirmation-text">You will receive a confirmation email at: <strong>@registrationModel.Email</strong></p>
+            <div class="action-buttons">
+                <a href="/events/@Id" class="btn-secondary">View Event Details</a>
+                <a href="/events" class="btn-primary">View More Events</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="registration-container">
+            <div class="registration-header">
+                <a href="/events/@Id" class="back-link">← Back to Details</a>
+                <h1>Event Registration</h1>
+                <h2>@selectedEvent.Name</h2>
+            </div>
+
+            <div class="registration-form">
+                <EditForm Model="@registrationModel" OnValidSubmit="HandleRegistration">
+                    <DataAnnotationsValidator />
+                    
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <InputText id="fullName" class="form-control" @bind-Value="registrationModel.FullName" placeholder="John Doe" />
+                        <ValidationMessage For="@(() => registrationModel.FullName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="registrationModel.Email" placeholder="john@example.com" />
+                        <ValidationMessage For="@(() => registrationModel.Email)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <InputText id="phone" class="form-control" @bind-Value="registrationModel.Phone" placeholder="+1 234 567 8900" />
+                        <ValidationMessage For="@(() => registrationModel.Phone)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attendees">Number of Attendees *</label>
+                        <InputNumber id="attendees" class="form-control" @bind-Value="registrationModel.NumberOfAttendees" min="1" max="10" />
+                        <small class="form-text">You can register up to 10 people</small>
+                        <ValidationMessage For="@(() => registrationModel.NumberOfAttendees)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comments">Additional Comments</label>
+                        <InputTextArea id="comments" class="form-control" @bind-Value="registrationModel.Comments" rows="4" placeholder="Any special requirements or comments..." />
+                        <ValidationMessage For="@(() => registrationModel.Comments)" />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Complete Registration</button>
+                        <button type="button" class="btn-cancel" @onclick="Cancel">Cancel</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Event? selectedEvent;
+    private RegistrationModel registrationModel = new();
+    private bool registrationComplete = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SessionService.InitializeAsync();
+        selectedEvent = EventService.GetEventById(Id);
+        
+        // Pre-fill form if user is logged in
+        var currentUser = SessionService.GetCurrentUser();
+        if (currentUser != null)
+        {
+            registrationModel.FullName = currentUser.UserName;
+            registrationModel.Email = currentUser.Email;
+        }
+    }
+
+    private async Task HandleRegistration()
+    {
+        // Register attendance if user is logged in
+        var currentUser = SessionService.GetCurrentUser();
+        if (currentUser != null && selectedEvent != null)
+        {
+            AttendanceService.RegisterAttendance(
+                selectedEvent.Id,
+                selectedEvent.Name,
+                currentUser,
+                registrationModel.NumberOfAttendees
+            );
+        }
+        
+        registrationComplete = true;
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/events/{Id}");
+    }
+}

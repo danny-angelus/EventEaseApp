@@ -1,0 +1,116 @@
+@page "/profile"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject UserSessionService SessionService
+@inject AttendanceService AttendanceService
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>My Profile - EventEase</PageTitle>
+
+<div class="profile-page">
+    @if (!SessionService.IsLoggedIn())
+    {
+        <div class="not-logged-in">
+            <h1>🔒 Not Logged In</h1>
+            <p>Please login to view your profile.</p>
+            <a href="/login" class="btn-login-link">Go to Login</a>
+        </div>
+    }
+    else
+    {
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">@GetInitials(currentUser!.UserName)</div>
+                <div class="profile-info">
+                    <h1>@currentUser!.UserName</h1>
+                    <p>@currentUser.Email</p>
+                    <small>Member since @currentUser.SessionStart.ToString("MMMM dd, yyyy")</small>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <h2>📅 My Registered Events</h2>
+                
+                @if (!userAttendance.Any())
+                {
+                    <div class="no-events">
+                        <p>You haven't registered for any events yet.</p>
+                        <a href="/events" class="btn-browse">Browse Events</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="attendance-list">
+                        @foreach (var record in userAttendance)
+                        {
+                            var eventData = EventService.GetEventById(record.EventId);
+                            <div class="attendance-card" @key="record.Id">
+                                <div class="attendance-header">
+                                    <h3>@record.EventName</h3>
+                                    <span class="status-badge status-@record.AttendanceStatus.ToLower()">@record.AttendanceStatus</span>
+                                </div>
+                                <div class="attendance-details">
+                                    @if (eventData != null)
+                                    {
+                                        <p><strong>📅 Date:</strong> @eventData.Date.ToString("MMMM dd, yyyy 'at' hh:mm tt")</p>
+                                        <p><strong>📍 Location:</strong> @eventData.Location</p>
+                                    }
+                                    <p><strong>👥 Attendees:</strong> @record.NumberOfAttendees</p>
+                                    <p><strong>✅ Registered:</strong> @record.RegistrationDate.ToString("MMMM dd, yyyy")</p>
+                                </div>
+                                <div class="attendance-actions">
+                                    <a href="/events/@record.EventId" class="btn-view">View Event</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="profile-stats">
+                    <h2>📊 Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">@userAttendance.Count</div>
+                            <div class="stat-label">Events Registered</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">@userAttendance.Sum(a => a.NumberOfAttendees)</div>
+                            <div class="stat-label">Total Attendees</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">@userAttendance.Count(a => a.AttendanceStatus == "Registered")</div>
+                            <div class="stat-label">Active Registrations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private UserSession? currentUser;
+    private List<AttendanceRecord> userAttendance = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SessionService.InitializeAsync();
+        currentUser = SessionService.GetCurrentUser();
+        
+        if (!SessionService.IsLoggedIn())
+        {
+            return;
+        }
+
+        userAttendance = AttendanceService.GetUserAttendance(currentUser!.UserId);
+    }
+
+    private string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "?";
+        if (parts.Length == 1) return parts[0].Substring(0, Math.Min(2, parts[0].Length)).ToUpper();
+        return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+    }
+}

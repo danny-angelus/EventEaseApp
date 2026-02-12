@@ -1,0 +1,93 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using EventEaseApp.Services
+@inject UserSessionService SessionService
+@inject NavigationManager Navigation
+
+<PageTitle>Login - EventEase</PageTitle>
+
+<div class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🔐 Login to EventEase</h1>
+            <p>Enter your details to access your account</p>
+        </div>
+
+        <div class="login-form">
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <InputText id="userName" class="form-control" @bind-Value="loginModel.UserName" placeholder="John Doe" />
+                    <ValidationMessage For="@(() => loginModel.UserName)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <InputText id="email" type="email" class="form-control" @bind-Value="loginModel.Email" placeholder="john@example.com" />
+                    <ValidationMessage For="@(() => loginModel.Email)" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-login" disabled="@isLoggingIn">
+                        @if (isLoggingIn)
+                        {
+                            <span>Logging in...</span>
+                        }
+                        else
+                        {
+                            <span>Login</span>
+                        }
+                    </button>
+                    <a href="/" class="btn-cancel">Cancel</a>
+                </div>
+            </EditForm>
+
+            <div class="login-info">
+                <p><strong>Note:</strong> This is a simulated login for demonstration purposes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private bool isLoggingIn = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SessionService.InitializeAsync();
+        
+        // If already logged in, redirect to home
+        if (SessionService.IsLoggedIn())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        isLoggingIn = true;
+        try
+        {
+            await SessionService.LoginUserAsync(loginModel.UserName, loginModel.Email);
+            Navigation.NavigateTo("/");
+        }
+        finally
+        {
+            isLoggingIn = false;
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters")]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
+        public string Email { get; set; } = string.Empty;
+    }
+}

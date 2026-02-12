@@ -1,0 +1,106 @@
+@page "/events/{id:int}"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>@(selectedEvent?.Name ?? "Event Details") - EventEase</PageTitle>
+
+<div class="event-details-page">
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading event details...</p>
+        </div>
+    }
+    else if (selectedEvent == null)
+    {
+        <div class="not-found">
+            <h1>😕 Event Not Found</h1>
+            <p>The event you are looking for does not exist or has been removed.</p>
+            <div class="error-actions">
+                <a href="/events" class="btn-back">Back to Event List</a>
+                <a href="/" class="btn-home">Go to Home</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="details-container">
+            <div class="details-header">
+                <a href="/events" class="back-link">← Back to Events</a>
+                <h1>@selectedEvent.Name</h1>
+            </div>
+
+            <div class="details-content">
+                <div class="details-section">
+                    <h2>📋 Event Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">📅 Date:</span>
+                            <span class="info-value">@selectedEvent.Date.ToString("dddd, MMMM dd, yyyy")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">🕒 Time:</span>
+                            <span class="info-value">@selectedEvent.Date.ToString("hh:mm tt")</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">📍 Location:</span>
+                            <span class="info-value">@selectedEvent.Location</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">👥 Capacity:</span>
+                            <span class="info-value">@selectedEvent.Capacity people</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h2>📝 Description</h2>
+                    <p class="description">@selectedEvent.Description</p>
+                </div>
+
+                <div class="action-section">
+                    <button class="btn-register" @onclick="GoToRegistration">
+                        Register for this Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Event? selectedEvent;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Simulate loading delay
+            await Task.Delay(300);
+            selectedEvent = EventService.GetEventById(Id);
+        }
+        catch (Exception)
+        {
+            selectedEvent = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void GoToRegistration()
+    {
+        if (selectedEvent != null)
+        {
+            Navigation.NavigateTo($"/events/{Id}/register");
+        }
+    }
+}

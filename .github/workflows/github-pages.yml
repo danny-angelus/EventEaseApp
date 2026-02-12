@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+# Run workflow on every push to the main branch
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v4
+
+      # Install .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # Publish the app
+      - name: Publish .NET Project
+        run: dotnet publish EventEaseApp.csproj -c Release -o dist/Web --nologo
+
+      # Change base-tag in index.html
+      - name: Change base-tag in index.html
+        run: sed -i 's/<base href="\/" \/>/<base href="\/EventEaseApp\/" \/>/g' dist/Web/wwwroot/index.html
+
+      # Add .nojekyll file
+      - name: Add .nojekyll file
+        run: touch dist/Web/wwwroot/.nojekyll
+
+      # Upload artifacts
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/Web/wwwroot
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

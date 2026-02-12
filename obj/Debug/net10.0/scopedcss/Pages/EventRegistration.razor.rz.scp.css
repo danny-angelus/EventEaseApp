@@ -1,0 +1,260 @@
+.registration-page[b-u1c8sr9b5g] {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Not Found & Success States */
+.not-found[b-u1c8sr9b5g],
+.success-message[b-u1c8sr9b5g] {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.success-message[b-u1c8sr9b5g] {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+}
+
+.success-message h1[b-u1c8sr9b5g] {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.success-message h2[b-u1c8sr9b5g] {
+    font-size: 1.8rem;
+    margin: 1.5rem 0;
+    font-weight: 700;
+}
+
+.event-date[b-u1c8sr9b5g] {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    opacity: 0.95;
+}
+
+.confirmation-text[b-u1c8sr9b5g] {
+    font-size: 1.1rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+.action-buttons[b-u1c8sr9b5g] {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-primary[b-u1c8sr9b5g],
+.btn-secondary[b-u1c8sr9b5g] {
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.btn-primary[b-u1c8sr9b5g] {
+    background: white;
+    color: #11998e;
+}
+
+.btn-secondary[b-u1c8sr9b5g] {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-primary:hover[b-u1c8sr9b5g],
+.btn-secondary:hover[b-u1c8sr9b5g] {
+    transform: translateY(-2px);
+}
+
+/* Registration Form */
+.registration-container[b-u1c8sr9b5g] {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.registration-header[b-u1c8sr9b5g] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+}
+
+.back-link[b-u1c8sr9b5g] {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.back-link:hover[b-u1c8sr9b5g] {
+    color: white;
+}
+
+.registration-header h1[b-u1c8sr9b5g] {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.registration-header h2[b-u1c8sr9b5g] {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+.registration-form[b-u1c8sr9b5g] {
+    padding: 2rem;
+}
+
+.form-group[b-u1c8sr9b5g] {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label[b-u1c8sr9b5g] {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-control[b-u1c8sr9b5g] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-control:focus[b-u1c8sr9b5g] {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Validation Styles */
+.form-control.invalid[b-u1c8sr9b5g] {
+    border-color: #dc3545;
+}
+
+.form-control:invalid[b-u1c8sr9b5g] {
+    border-color: #dc3545;
+}
+
+.validation-message[b-u1c8sr9b5g] {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+    font-weight: 500;
+}
+
+.validation-errors[b-u1c8sr9b5g] {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #721c24;
+}
+
+.validation-errors ul[b-u1c8sr9b5g] {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.validation-errors li[b-u1c8sr9b5g] {
+    margin: 0.25rem 0;
+}
+
+.form-text[b-u1c8sr9b5g] {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.form-actions[b-u1c8sr9b5g] {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-submit[b-u1c8sr9b5g],
+.btn-cancel[b-u1c8sr9b5g] {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit[b-u1c8sr9b5g] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:hover:not(:disabled)[b-u1c8sr9b5g] {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-submit:disabled[b-u1c8sr9b5g] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-cancel[b-u1c8sr9b5g] {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.btn-cancel:hover[b-u1c8sr9b5g] {
+    background: #e0e0e0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .registration-page[b-u1c8sr9b5g] {
+        padding: 1rem;
+    }
+
+    .registration-header h1[b-u1c8sr9b5g] {
+        font-size: 1.5rem;
+    }
+
+    .registration-header h2[b-u1c8sr9b5g] {
+        font-size: 1.1rem;
+    }
+
+    .form-actions[b-u1c8sr9b5g] {
+        flex-direction: column;
+    }
+
+    .action-buttons[b-u1c8sr9b5g] {
+        flex-direction: column;
+    }
+
+    .btn-primary[b-u1c8sr9b5g],
+    .btn-secondary[b-u1c8sr9b5g] {
+        width: 100%;
+    }
+}

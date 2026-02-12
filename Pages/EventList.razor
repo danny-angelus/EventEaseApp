@@ -1,0 +1,51 @@
+@page "/events"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@using EventEaseApp.Components
+@inject EventService EventService
+
+<PageTitle>Event List - EventEase</PageTitle>
+
+<div class="events-page">
+    <div class="page-header">
+        <h1>🎉 Available Events</h1>
+        <p class="subtitle">Discover and participate in the best events</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading events...</p>
+        </div>
+    }
+    else if (events == null || !events.Any())
+    {
+        <div class="no-events">
+            <p>No events available at this time.</p>
+        </div>
+    }
+    else
+    {
+        <div class="events-grid">
+            <Virtualize Items="@events" Context="evt">
+                <div @key="evt.Id">
+                    <EventCard Event="@evt" ShowDetailsButton="true" ShowDescription="false" />
+                </div>
+            </Virtualize>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Event>? events;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate loading delay to demonstrate loading state
+        await Task.Delay(500);
+        events = EventService.GetAllEvents();
+        isLoading = false;
+    }
+}
