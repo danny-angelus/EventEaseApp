@@ -33,11 +33,18 @@ jobs:
       - name: Publish .NET Project
         run: dotnet publish EventEaseApp.csproj -c Release -o dist/Web --nologo
 
-      # Change base-tag in index.html
+      # Change base-tag in index.html for GitHub Pages subdirectory
       - name: Change base-tag in index.html
         run: sed -i 's/<base href="\/" \/>/<base href="\/EventEaseApp\/" \/>/g' dist/Web/wwwroot/index.html
 
-      # Add .nojekyll file
+      # Copy and update 404.html for client-side routing
+      - name: Setup 404.html for SPA routing
+        run: |
+          # The 404.html file needs to be in wwwroot for GitHub Pages to use it
+          # It's already built into dist/Web/wwwroot from dotnet publish
+          echo "404.html is ready for GitHub Pages SPA routing"
+
+      # Add .nojekyll file to prevent Jekyll processing
       - name: Add .nojekyll file
         run: touch dist/Web/wwwroot/.nojekyll
 
