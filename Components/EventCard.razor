@@ -37,7 +37,7 @@
     @if (ShowDetailsButton)
     {
         <div class="event-card-footer">
-            <a href="@($"/events/{Event.Id}")" class="btn-details" @onclick="NavigateToDetails" @onclick:preventDefault="true">View Details</a>
+            <a href="@($"events/{Event.Id}")" class="btn-details" @onclick="NavigateToDetails" @onclick:preventDefault="true">View Details</a>
         </div>
     }
 </div>
@@ -63,6 +63,6 @@
 
     private void NavigateToDetails()
     {
-        Navigation.NavigateTo($"/events/{Event.Id}");
+        Navigation.NavigateTo($"events/{Event.Id}");
     }
 }
