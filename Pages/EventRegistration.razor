@@ -14,7 +14,7 @@
         <div class="not-found">
             <h1>😕 Event Not Found</h1>
             <p>Cannot register for an event that does not exist.</p>
-            <a href="/events" class="btn-back">Back to Event List</a>
+            <a href="events" class="btn-back">Back to Event List</a>
         </div>
     }
     else if (registrationComplete)
@@ -26,8 +26,8 @@
             <p class="event-date">📅 @selectedEvent.Date.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")</p>
             <p class="confirmation-text">You will receive a confirmation email at: <strong>@registrationModel.Email</strong></p>
             <div class="action-buttons">
-                <a href="/events/@Id" class="btn-secondary">View Event Details</a>
-                <a href="/events" class="btn-primary">View More Events</a>
+                <a href="events/@Id" class="btn-secondary">View Event Details</a>
+                <a href="events" class="btn-primary">View More Events</a>
             </div>
         </div>
     }
@@ -35,7 +35,7 @@
     {
         <div class="registration-container">
             <div class="registration-header">
-                <a href="/events/@Id" class="back-link">← Back to Details</a>
+                <a href="events/@Id" class="back-link">← Back to Details</a>
                 <h1>Event Registration</h1>
                 <h2>@selectedEvent.Name</h2>
             </div>
