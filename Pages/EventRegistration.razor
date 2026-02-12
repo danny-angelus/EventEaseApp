@@ -122,6 +122,8 @@
         }
         
         registrationComplete = true;
+        // Navigate to event details page after successful registration
+        Navigation.NavigateTo($"events/{Id}");
     }
 
     private void Cancel()
