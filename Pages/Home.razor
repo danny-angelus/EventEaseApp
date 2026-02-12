@@ -1,0 +1,60 @@
+@page "/"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@using EventEaseApp.Components
+@inject EventService EventService
+
+<PageTitle>EventEase - Event Management</PageTitle>
+
+<div class="home-page">
+    <div class="hero-section">
+        <h1>🎉 Welcome to EventEase</h1>
+        <p class="hero-subtitle">Your comprehensive platform to discover and manage amazing events</p>
+        <a href="events" class="btn-explore">Explore All Events</a>
+    </div>
+
+    <div class="featured-events">
+        <h2>Upcoming Featured Events</h2>
+        
+        @if (isLoading)
+        {
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p>Loading featured events...</p>
+            </div>
+        }
+        else if (upcomingEvents == null || !upcomingEvents.Any())
+        {
+            <p class="no-events">No upcoming events at this time.</p>
+        }
+        else
+        {
+            <div class="events-grid">
+                @foreach (var upcomingEvent in upcomingEvents)
+                {
+                    <EventCard Event="@upcomingEvent" @key="upcomingEvent.Id" />
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Event> upcomingEvents = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate loading
+        await Task.Delay(500);
+        
+        var allEvents = EventService.GetAllEvents();
+        upcomingEvents = allEvents
+            .Where(e => e.Date >= DateTime.Now)
+            .OrderBy(e => e.Date)
+            .Take(3)
+            .ToList();
+        
+        isLoading = false;
+    }
+}
