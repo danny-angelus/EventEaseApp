@@ -1,35 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8">
     <title>EventEase</title>
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // https://github.com/rafgraph/spa-github-pages
-      // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
-      var pathSegmentsToKeep = 1;
+        // Single Page Apps for GitHub Pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
+        // This script checks for a redirect and converts it to a # hashbang url
+        // It is designed to work with the 404.html file to enable client-side routing
+        
+        var pathSegmentsToKeep = 1; // For /EventEaseApp/ subdirectory
 
-      var l = window.location;
-      l.replace(
-        l.protocol +
-          "//" +
-          l.hostname +
-          (l.port ? ":" + l.port : "") +
-          l.pathname
-            .split("/")
-            .slice(0, 1 + pathSegmentsToKeep)
-            .join("/") +
-          "/?/" +
-          l.pathname
-            .slice(1)
-            .split("/")
-            .slice(pathSegmentsToKeep)
-            .join("/")
-            .replace(/&/g, "~and~") +
-          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
-          l.hash,
-      );
+        var l = window.location;
+        
+        // Redirect to index.html with the path as hash
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
     </script>
-  </head>
-  <body></body>
+</head>
+<body>
+    <!-- This page is a redirect for Single Page Apps hosted on GitHub Pages -->
+</body>
 </html>
