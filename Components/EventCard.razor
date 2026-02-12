@@ -1,5 +1,5 @@
 @using EventEaseApp.Models
-@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager Navigation
 
 <div class="event-card">
     <div class="event-card-header">
@@ -37,11 +37,10 @@
     @if (ShowDetailsButton)
     {
         <div class="event-card-footer">
-            <NavLink href="@($"/events/{Event.Id}")" class="btn-details">View Details</NavLink>
+            <a href="@($"/events/{Event.Id}")" class="btn-details" @onclick="NavigateToDetails" @onclick:preventDefault="true">View Details</a>
         </div>
     }
 </div>
-
 
 @code {
     /// <summary>
@@ -61,4 +60,9 @@
     /// </summary>
     [Parameter]
     public bool ShowDescription { get; set; } = false;
+
+    private void NavigateToDetails()
+    {
+        Navigation.NavigateTo($"/events/{Event.Id}");
+    }
 }
